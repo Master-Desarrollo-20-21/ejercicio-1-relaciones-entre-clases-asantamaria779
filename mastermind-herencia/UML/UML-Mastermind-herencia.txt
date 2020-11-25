@@ -8,10 +8,9 @@ class Mastermind {
 class Game {
 	~int MAX_ATTEMPS
 	~int numberOfAttemps
-	~SecretCombination secretCombination
 	~Result[] results
 	~Game()
-	-void showStateOfGame()
+	-void showState()
 	-Result check(ProposedCombination proposedCombination)
 	+void play()
 }
@@ -25,10 +24,10 @@ class SecretCombination {
 }
 
 class Result {
-	~ProposedCombination proposedCombination
 	~int numberOfBlacks
 	~int numberOfWhites
-	~Result(ProposedCombination proposedCombination, int numberOfBlacks, int numberOfWhites)
+	~Result(ProposedCombination proposedCombination, 
+                int numberOfBlacks,int numberOfWhites)
 	+boolean isWinner()
 	+void show()
 }
@@ -70,19 +69,21 @@ enum Colour {
 	+{static}String validColours()
 }
 
+Mastermind ..> Console
 Mastermind *-down-> Game
+Game -[hidden]down-> Combination
 Game *-down-> SecretCombination
+Game .down.> ProposedCombination
 Game *-down-> "0..10" Result
-Result -down-> ProposedCombination
+Game ..> Console
+Result .down.> Console
+Combination -[hidden]right-> Result
 Combination <|-down- SecretCombination
 Combination <|-down- ProposedCombination
 Combination -down-> Colour
-SecretCombination -down-> Colour
-Game ..> Console
-Mastermind ..> Console
-ProposedCombination .down.> Console
 SecretCombination .down..> Console
-Result .down.> Console
-Result -[hidden]right-> Combination
-SecretCombination -[hidden]right-> ProposedCombination
+SecretCombination -down-> Colour
+SecretCombination .right.> ProposedCombination
+ProposedCombination *-down-> Result
+ProposedCombination .down.> Console
 @enduml
