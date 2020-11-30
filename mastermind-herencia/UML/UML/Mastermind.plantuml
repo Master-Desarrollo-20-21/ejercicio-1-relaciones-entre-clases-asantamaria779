@@ -1,0 +1,126 @@
+@startuml
+class Mastermind {
+	~Mastermind()
+	-void play()
+	-boolean isResumedGame()
+	+{static}void main(String[] args)
+}
+class Game {
+	~int MAX_ATTEMPTS
+	~int numberOfAttempts
+	~Game()
+	+void play()
+	-void showState()
+	+void reset()
+}
+abstract class Combination {
+	#{static}int LENGHT
+	#String colours
+	~Combination(String colours)
+	#{static}boolean isValidLength(String)
+	#{static}boolean areValidColours(String)
+	#{static}String validColours()
+	#{static}int length()
+	#{abstract}void show()
+}
+class SecretCombination {
+	~SecretCombination()
+	-{static}String makeRandom()
+	+int numberCoincidencesInColourAndPosition(ProposedCombination)
+	+int numberCoincidencesInColourOnly(ProposedCombination)
+	+void show()
+}
+class ProposedCombination {
+	~ProposedCombination()
+	-{static}String proposeCombination()
+	-{static}String readCombination()
+	+void show()
+}
+class Result {
+	~int numberOfBlacks
+	~int numberOfWhites
+	~Result(ProposedCombination)
+	+void check(SecretCombination)
+	+boolean isWinner()
+	+void show()
+}
+class YesNoDialog {
+	-{static}char AFFIRMATIVE
+	-{static}char NEGATIVE
+	-{static}String SUFFIX
+	-{static}String MESSAGE
+	-char answer
+	+boolean read(String)
+	-boolean isAfirmative()
+	-char getAnswer()
+	-boolean isNegative()
+}
+class Console {
+	-{static}Console console
+	-BufferedReader bufferedReader
+	+{static}Console getInstance()
+	+String readString(String)
+	+char readChar(String)
+	+void write(String)
+	+void writeln(String)
+	+void writeError(String)
+}
+enum Message {
+	TITTLE
+	RESUME
+	PLAYER_WIN
+	PLAYER_LOST
+	NUMBER_ATTEMPTS
+	PROPOSE_COMBINATION
+	RESULT
+	message
+	-Message(String)
+	~void write()
+	~void writeln()
+	~void writeln(int)
+	~void writeln(int,int)
+}
+enum Error {
+	WRONG_LENGTH_COMBINATION
+	WRONG_COLOURS_COMBINATION
+	NULL
+	message
+	~Error()
+	~Error(String)
+	~void writeln(String)
+	~void writeln()
+}
+enum Colour {
+	RED
+	BLUE
+	YELLOW
+	GREEN
+	ORANGE
+	PINK
+	colour
+	~Colour(char)
+	+{static}boolean isValid(char)
+	+{static}String validColours()
+}
+Mastermind *-down-> Game
+Game *-down-> "0..10" Result
+Game .down.> ProposedCombination
+Game *-down-> SecretCombination
+Combination <|-- SecretCombination
+Combination <|-- ProposedCombination
+Result *-down-> ProposedCombination
+Result ..> SecretCombination
+SecretCombination .left.> ProposedCombination
+Error ..> Console
+Message ..> Console
+SecretCombination ..> Console
+ProposedCombination ..> Console
+YesNoDialog ..> Console
+ProposedCombination ..> Error
+Combination ..> Colour
+SecretCombination ..> Colour
+Mastermind ..> YesNoDialog
+Mastermind ..> Message
+Game ..> Message
+Result ..> Message
+@enduml
